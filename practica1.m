@@ -3,8 +3,8 @@ clear all
 
 %% cargamos la base de datos de Iris
 run loadIris
-inputs = [VarName1, VarName2, VarName3, VarName4]
-outputs = Irissetosa
+inputs = [VarName1, VarName2, VarName3, VarName4];
+outputs = Irissetosa;
 %% normalización
 
 %% 10-fold como partición del conjunto de datos
@@ -30,4 +30,21 @@ fprintf('ACC media para el discriminante lineal con Iris: %f\n',mean(mean(ACC)))
 fprintf('Spec media para el discriminante lineal con Iris : %f\n',mean(mean(Spec)))
 
 
+%% entrenamos con el discriminante cuadratico
+typeDiscr = 'quadratic';
 
+for i = 1:cv.NumTestSets
+    trIdx = cv.training(i);
+    teIdx = cv.test(i);
+    mdlListDiscrQuadr{i} = fitcdiscr(inputs(trIdx,:), outputs(trIdx,:), 'DiscrimType', typeDiscr);
+    prediction = predict(mdlListDiscrQuadr{i}, inputs(teIdx,:));
+    [CM, orderCM] = confusionmat(outputs(teIdx,:), prediction);
+    for j = 1:size(CM,1)
+        [Recall(i,j),Spec(i,j),Precision(i,j),NPV(i,j),ACC(i,j),F1Score(i,j)] = performance_indexes(CM,j);
+    end
+end
+%% muestra de resultados medios
+fprintf('Precision media para el discriminante cuadratico con Iris: %f\n',mean(mean(Precision)))
+fprintf('Recall media para el discriminante cuadratico con Iris: %f\n',mean(mean(Recall)))
+fprintf('ACC media para el discriminante cuadratico con Iris: %f\n',mean(mean(ACC)))
+fprintf('Spec media para el discriminante cuadratico con Iris : %f\n',mean(mean(Spec)))
