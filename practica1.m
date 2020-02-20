@@ -57,10 +57,11 @@ fprintf('Spec media para el discriminante cuadratico con Iris : %f\n',mean(mean(
 %% Diagramas de cajas y bigotes
 
 %% Diferencias significativas entre modelos
-ACCMeanLinear = mean(ACCLinear,2) % para cada modelo calculamos la ACC media para las tres clases de flor
-ACCMeanQuadr = mean(ACCQuadr,2)
-muestras = [ACCMeanLinear,ACCMeanQuadr]
-% [P] = testEstadistico(prueba,['Linear  ';'Quadratico'],0.05)
+ACCMeanLinear = mean(ACCLinear,2); % para cada modelo calculamos la ACC media para las tres clases de flor
+ACCMeanQuadr = mean(ACCQuadr,2);
+muestras = [ACCMeanLinear,ACCMeanQuadr];
+etiquetas = ['linear';'quadra'];
+[P] = testEstadistico(muestras,etiquetas,0.05)
 
 
 
