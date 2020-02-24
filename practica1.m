@@ -2,15 +2,15 @@
 clear all
 
 %% cargamos la base de datos de Iris
-%run loadIris
-%inputs = [VarName1, VarName2, VarName3, VarName4];
-%outputs = Irissetosa;
-%% cargamos la base de datos de cancer
 run loadIris
 inputs = [VarName1, VarName2, VarName3, VarName4];
 outputs = Irissetosa;
-%% normalizaciï¿½n
-
+%% cargamos la base de datos de cancer
+%run loadIris
+%inputs = [VarName1, VarName2, VarName3, VarName4];
+%outputs = Irissetosa;
+%% normalización
+inputs = (inputs - mean(mean(inputs)))/std(std(inputs));
 %% 10-fold como particiï¿½n del conjunto de datos
 typeDiscr = 'linear';
 TypeCV = 'KFold';
@@ -37,17 +37,12 @@ fprintf('Spec media para el discriminante cuadratico con Iris : %f\n',mean(mean(
 %% Curva ROC
 %[X,Y,T,AUC] = perfcurve(outputs{cv.test(1)},prediction{1},'virginica');
 %plot(X,Y)
-%% Errores de entrenamiento y test
-
-%% Diagramas de cajas y bigotes
-ACCMeanLinear = mean(ACCLinear,2); % para cada modelo calculamos la ACC media para las tres clases de flor
-ACCMeanQuadr = mean(ACCQuadr,2);
-boxplot([ACCMeanLinear,ACCMeanQuadr])
 
 %% Diferencias significativas entre modelos
+ACCMeanLinear = mean(ACCLinear,2); % para cada modelo calculamos la ACC media para las tres clases de flor
+ACCMeanQuadr = mean(ACCQuadr,2);
+
 muestras = [ACCMeanLinear,ACCMeanQuadr];
 etiquetas = ['linear';'quadra'];
 [P] = testEstadistico(muestras,etiquetas,0.05)
-
-
 
