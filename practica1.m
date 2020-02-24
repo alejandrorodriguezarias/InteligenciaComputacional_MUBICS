@@ -5,10 +5,6 @@ clear all
 run loadIris
 inputs = [VarName1, VarName2, VarName3, VarName4];
 outputs = Irissetosa;
-%% cargamos la base de datos de cancer
-%run loadIris
-%inputs = [VarName1, VarName2, VarName3, VarName4];
-%outputs = Irissetosa;
 %% normalización
 inputs = (inputs - mean(mean(inputs)))/std(std(inputs));
 %% 10-fold como particiï¿½n del conjunto de datos
@@ -35,8 +31,10 @@ fprintf('ACC media para el discriminante cuadratico con Iris: %f\n',mean(mean(AC
 fprintf('Spec media para el discriminante cuadratico con Iris : %f\n',mean(mean(SpecQuadr)))
 
 %% Curva ROC
-%[X,Y,T,AUC] = perfcurve(outputs{cv.test(1)},prediction{1},'virginica');
-%plot(X,Y)
+plot((1-SpecQuadr),RecallQuadr, 'color','blue');
+hold on;
+plot((1-SpecLinear),RecallLinear, 'color','red');
+hold off;
 
 %% Diferencias significativas entre modelos
 ACCMeanLinear = mean(ACCLinear,2); % para cada modelo calculamos la ACC media para las tres clases de flor
