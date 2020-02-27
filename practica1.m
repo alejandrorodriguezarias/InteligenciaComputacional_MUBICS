@@ -58,3 +58,5 @@ rows = any(isnan(inputs),2);
 dataset(rows,:) = [];
 inputs = dataset(:,1:9)
 outputs = dataset(:,10)
+%% normalización
+inputs = (inputs - mean(mean(inputs)))/std(std(inputs));
