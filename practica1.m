@@ -51,12 +51,34 @@ inputs = [VarName1, VarName2, VarName3, VarName4, VarName5, VarName6, VarName7, 
 outputs = ClaseCancer;
 
 %% eliminar valores nulos (se podría rellenar con valores medios)
-dataset = [inputs,outputs]
+dataset = [inputs,outputs];
 %filas con valores nulos
 rows = any(isnan(inputs),2);
 %eliminación de valores nulos
 dataset(rows,:) = [];
-inputs = dataset(:,1:9)
-outputs = dataset(:,10)
+inputs = dataset(:,1:9);
+outputs = dataset(:,10);
 %% normalización
 inputs = (inputs - mean(mean(inputs)))/std(std(inputs));
+
+%% 10-fold como particion del conjunto de datos
+typeDiscr = 'linear';
+TypeCV = 'KFold';
+k = 10;
+cv = cvpartition(outputs,TypeCV,k);
+%% entrenamos con el discriminante lineal
+[RecallLinear,SpecLinear,PrecisionLinear,NPVLinear,ACCLinear,F1ScoreLinear, predictionLinear] = trainingDiscr(typeDiscr, cv, inputs, outputs);
+%% muestra de resultados medios
+disp('valores para cancer');
+fprintf('Precision media para el discriminante lineal con Cancer: %f\n',mean(PrecisionLinear))
+fprintf('Recall media para el discriminante lineal con Cancer: %f\n',mean(RecallLinear))
+fprintf('ACC media para el discriminante lineal con Cancer: %f\n',mean(ACCLinear))
+fprintf('Spec media para el discriminante lineal con Cancer: %f\n',mean(SpecLinear))
+%% entrenamos con el discriminante cuadratico
+typeDiscr = 'quadratic';
+[RecallQuadr,SpecQuadr,PrecisionQuadr,NPVQuadr,ACCQuadr,F1ScoreQuadr, predictionQuadr] = trainingDiscr(typeDiscr, cv, inputs, outputs);
+%% muestra de resultados medios
+fprintf('Precision media para el discriminante cuadratico con Cancer: %f\n',mean(PrecisionQuadr))
+fprintf('Recall media para el discriminante cuadratico con Cancer: %f\n',mean(RecallQuadr))
+fprintf('ACC media para el discriminante cuadratico con Cancer: %f\n',mean(ACCQuadr))
+fprintf('Spec media para el discriminante cuadratico con Cancer: %f\n',mean(SpecQuadr))
