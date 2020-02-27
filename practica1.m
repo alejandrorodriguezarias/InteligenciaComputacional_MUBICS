@@ -1,6 +1,7 @@
 %% limpiar  
 clear all
-
+%cambiar la semilla 
+rng('shuffle')
 %% cargamos la base de datos de Iris
 run loadIris
 inputs = [VarName1, VarName2, VarName3, VarName4];
@@ -43,4 +44,9 @@ ACCMeanQuadr = mean(ACCQuadr,2);
 muestras = [ACCMeanLinear,ACCMeanQuadr];
 etiquetas = ['linear';'quadra'];
 [P] = testEstadistico(muestras,etiquetas,0.05)
+
+%% cargamos la base de datos de cancer
+run loadCancer
+inputs = [VarName1, VarName2, VarName3, VarName4, VarName5, VarName6, VarName7, VarName8, VarName9];
+outputs = ClaseCancer;
 
