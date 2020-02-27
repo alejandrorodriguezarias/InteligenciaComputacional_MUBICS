@@ -50,3 +50,11 @@ run loadCancer
 inputs = [VarName1, VarName2, VarName3, VarName4, VarName5, VarName6, VarName7, VarName8, VarName9];
 outputs = ClaseCancer;
 
+%% eliminar valores nulos (se podría rellenar con valores medios)
+dataset = [inputs,outputs]
+%filas con valores nulos
+rows = any(isnan(inputs),2);
+%eliminación de valores nulos
+dataset(rows,:) = [];
+inputs = dataset(:,1:9)
+outputs = dataset(:,10)
