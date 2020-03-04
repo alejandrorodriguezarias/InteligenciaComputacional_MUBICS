@@ -41,7 +41,7 @@ hold off;
 ACCMeanLinear = mean(ACCLinear,2); % para cada modelo calculamos la ACC media para las tres clases de flor
 ACCMeanQuadr = mean(ACCQuadr,2);
 
-muestras = [ACCMeanLinear,ACCMeanQuadr];
+muestras = [ACCMeanLinear,ACCMeanQuadr]
 etiquetas = ['linear';'quadra'];
 [P] = testEstadistico(muestras,etiquetas,0.05)
 
@@ -82,3 +82,8 @@ fprintf('Precision media para el discriminante cuadratico con Cancer: %f\n',mean
 fprintf('Recall media para el discriminante cuadratico con Cancer: %f\n',mean(RecallQuadr))
 fprintf('ACC media para el discriminante cuadratico con Cancer: %f\n',mean(ACCQuadr))
 fprintf('Spec media para el discriminante cuadratico con Cancer: %f\n',mean(SpecQuadr))
+
+%% Diferencias significativas entre modelos
+muestras = [ACCLinear;ACCQuadr]';
+etiquetas = ['linear';'quadra'];
+[P] = testEstadistico(muestras,etiquetas,0.05)
