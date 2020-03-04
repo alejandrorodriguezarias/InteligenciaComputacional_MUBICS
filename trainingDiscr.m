@@ -5,5 +5,4 @@ for i = 1:cv.NumTestSets
     trIdx = cv.training(i);
     mdlListDiscrLinear{i} = fitcdiscr(inputs(trIdx,:), outputs(trIdx,:), 'DiscrimType', typeDiscr);
 end
-
 end
