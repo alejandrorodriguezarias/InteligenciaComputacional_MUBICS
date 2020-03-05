@@ -6,8 +6,14 @@ rng('shuffle')
 run loadIris
 inputs = [VarName1, VarName2, VarName3, VarName4];
 outputs = Irissetosa;
+
+
 %% normalización
-inputs = (inputs - mean(mean(inputs)))/std(std(inputs));
+% inputs = (inputs - mean(mean(inputs)))/std(std(inputs));
+inputs = normalize(inputs)
+boxplot(inputs)
+
+
 %% 10-fold como particiï¿½n del conjunto de datos
 typeDiscr = 'linear';
 TypeCV = 'KFold';
@@ -79,8 +85,9 @@ dataset(rows,:) = [];
 inputs = dataset(:,1:9);
 outputs = dataset(:,10);
 %% normalización
-inputs = (inputs - mean(mean(inputs)))/std(std(inputs));
-
+% inputs = (inputs - mean(mean(inputs)))/std(std(inputs));
+inputs = normalize(inputs)
+boxplot(inputs)
 %% 10-fold como particion del conjunto de datos
 typeDiscr = 'linear';
 TypeCV = 'KFold';
