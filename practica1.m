@@ -8,12 +8,16 @@ inputs = [VarName1, VarName2, VarName3, VarName4];
 outputs = Irissetosa;
 
 
-%% normalización
+%% normalizaciï¿½n
 % inputs = (inputs - mean(mean(inputs)))/std(std(inputs));
 inputs = normalize(inputs)
 boxplot(inputs)
 
-
+corrcoef(inputs)
+% eliminamos la variable anchura del petalo por estar altamente 
+% correlacionada con la longitud del petado (0,96)
+inputs(:,4) = [];
+corrcoef(inputs)
 %% 10-fold como particiï¿½n del conjunto de datos
 typeDiscr = 'linear';
 TypeCV = 'KFold';
@@ -76,15 +80,15 @@ run loadCancer
 inputs = [VarName1, VarName2, VarName3, VarName4, VarName5, VarName6, VarName7, VarName8, VarName9];
 outputs = ClaseCancer;
 
-%% eliminar valores nulos (se podría rellenar con valores medios)
+%% eliminar valores nulos (se podrï¿½a rellenar con valores medios)
 dataset = [inputs,outputs];
 %filas con valores nulos
 rows = any(isnan(inputs),2);
-%eliminación de valores nulos
+%eliminaciï¿½n de valores nulos
 dataset(rows,:) = [];
 inputs = dataset(:,1:9);
 outputs = dataset(:,10);
-%% normalización
+%% normalizaciï¿½n
 % inputs = (inputs - mean(mean(inputs)))/std(std(inputs));
 inputs = normalize(inputs)
 boxplot(inputs)
