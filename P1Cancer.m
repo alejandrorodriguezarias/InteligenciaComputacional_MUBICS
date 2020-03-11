@@ -1,6 +1,7 @@
 %% cargamos la base de datos de cancer
 run loadCancer
 inputs = [VarName1, VarName2, VarName3, VarName4, VarName5, VarName6, VarName7, VarName8, VarName9];
+inputsNames = {'Uniformity of Cell Size', 'Uniformity of Cell Shape','Marginal Adhesion','Single Epithelial Cell Size','Bare Nuclei','Bland Chromatin','Normal Nucleoli','Mitoses'};
 outputs = ClaseCancer;
 
 %% eliminar valores nulos (se podría rellenar con valores medios)
@@ -11,6 +12,9 @@ rows = any(isnan(inputs),2);
 dataset(rows,:) = [];
 inputs = dataset(:,1:9);
 outputs = dataset(:,10);
+newmatrix(outputs == 2) = {'benigno'};
+newmatrix(outputs == 4) = {'maligno'};
+outputs = newmatrix
 % eliminamos las variables correlacionadas
 corrcoef(inputs);
 inputs(:,2) = [];
@@ -88,9 +92,9 @@ cv = cvpartition(outputs,TypeCV,k);
 % MaxNumSplits: número máximo de bifurcaciones
 % MinLeafSize: número mínimo de observaciones para poder crear un nodo hoja
 % MinParentSize: cada nodo de ramificación tiene al menos MinParentSize observaciones
-mdls1 = trainingTree(cv,inputs,outputs,min(cv.TrainSize)-1,1,10,'on'); % por defecto
-mdls2 = trainingTree(cv,inputs,outputs,min(cv.TrainSize)-1,10,150,'on'); % consigue resultados muy similares a mdls1 pero es más simple
-mdls3 = trainingTree(cv,inputs,outputs,min(cv.TrainSize)-1,10,150,'on');
+mdls1 = trainingTree(cv,inputs,outputs,min(cv.TrainSize)-1,1,10,'on',inputsNames); % por defecto
+mdls2 = trainingTree(cv,inputs,outputs,min(cv.TrainSize)-1,10,150,'on',inputsNames); % consigue resultados muy similares a mdls1 pero es más simple
+mdls3 = trainingTree(cv,inputs,outputs,min(cv.TrainSize)-1,10,150,'on',inputsNames);
 
 view(mdls1{1},'Mode','graph')
 view(mdls2{1},'Mode','graph')
