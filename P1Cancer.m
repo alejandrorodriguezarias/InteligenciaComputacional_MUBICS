@@ -14,7 +14,7 @@ inputs = dataset(:,1:9);
 outputs = dataset(:,10);
 newmatrix(outputs == 2) = {'benigno'};
 newmatrix(outputs == 4) = {'maligno'};
-outputs = newmatrix'
+outputs = newmatrix';
 % eliminamos las variables correlacionadas
 corrcoef(inputs);
 inputs(:,2) = [];
@@ -68,7 +68,7 @@ fprintf('Recall media para el discriminante cuadratico con Cancer: %f\n',mean(Re
 fprintf('ACC media para el discriminante cuadratico con Cancer: %f\n',mean(ACCQuadr))
 fprintf('Spec media para el discriminante cuadratico con Cancer: %f\n',mean(SpecQuadr))
 %% muestra de resultados medios
-numReps = 10
+numReps = 10;
 for j = 1:numReps
     cv = cvpartition(outputs,TypeCV,k);
     mdls = trainingDiscr(typeDiscr, cv, inputs, outputs);
@@ -92,13 +92,34 @@ cv = cvpartition(outputs,TypeCV,k);
 % MaxNumSplits: número máximo de bifurcaciones
 % MinLeafSize: número mínimo de observaciones para poder crear un nodo hoja
 % MinParentSize: cada nodo de ramificación tiene al menos MinParentSize observaciones
-mdls1 = trainingTree(cv,inputs,outputs,min(cv.TrainSize)-1,1,10,'on',inputsNames); % por defecto
-mdls2 = trainingTree(cv,inputs,outputs,min(cv.TrainSize)-1,10,150,'on',inputsNames); % consigue resultados muy similares a mdls1 pero es más simple
-mdls3 = trainingTree(cv,inputs,outputs,min(cv.TrainSize)-1,20,300,'on',inputsNames);
+mdls1 = trainingTree(cv,inputs,outputs,min(cv.TrainSize)-1,1,10,'on',inputsNames,'gdi'); % por defecto
+mdls2 = trainingTree(cv,inputs,outputs,20,5,30,'on',inputsNames,'gdi'); 
+mdls3 = trainingTree(cv,inputs,outputs,3,20,300,'on',inputsNames,'twoing');
 
 view(mdls1{1},'Mode','graph')
 view(mdls2{1},'Mode','graph')
 view(mdls3{1},'Mode','graph')
+
+numReps = 10
+for j = 1:numReps
+    cv = cvpartition(outputs,TypeCV,k);
+    mdls1 = trainingTree(cv,inputs,outputs,min(cv.TrainSize)-1,1,10,'on',inputsNames,'gdi'); % por defecto
+    mdls2 = trainingTree(cv,inputs,outputs,20,5,30,'on',inputsNames,'gdi'); 
+    mdls3 = trainingTree(cv,inputs,outputs,3,20,300,'on',inputsNames,'twoing');
+    
+    mdlMatrix = [mdls1;mdls2;mdls3]
+    for n = 1:size(mdlMatrix,1)
+        [RecallTreeTMP,SpecTreeTMP,PrecisionTreeTMP,NPVTreeTMP,ACCTreeTMP,F1ScoreTreeTMP, predictionTree] = predictResults(cv, inputs, outputs, mdlMatrix(n,:), 0);
+        
+        RecallTree(n,j) = mean(RecallTreeTMP);
+        SpecTree(n,j) = mean(SpecTreeTMP);
+        PrecisionTree(n,j) = mean(PrecisionTreeTMP);
+        ACCTree(n,j) = mean(ACCTreeTMP);
+        F1ScoreTree(n,j) = mean(F1ScoreTreeTMP);
+    end
+    
+
+end
 
 %% Muestra los resultados medios en entrenamiento
 fprintf('\nENTRENAMIENTO')
@@ -119,7 +140,7 @@ fprintf('ACC media para árbol 2 con Cancer: %f\n',mean(ACCTree2TMP))
 fprintf('Spec media para árbol 2 con Cancer: %f\n',mean(SpecTree2TMP))
 
 % Arbol 3
-[RecallTree3TMP,SpecTree3TMP,PrecisionTree3TMP,NPVTree3TMP,ACCTree3TMP,F1ScoreTree3TMP, predictionTree3] = predictResults(cv, inputs, outputs, mdls, 1);
+[RecallTree3TMP,SpecTree3TMP,PrecisionTree3TMP,NPVTree3TMP,ACCTree3TMP,F1ScoreTree3TMP, predictionTree3] = predictResults(cv, inputs, outputs, mdls3, 1);
 fprintf('\nDatos de entrenamiento 3\n')
 fprintf('Precision media para árbol 3 con Cancer: %f\n',mean(PrecisionTree3TMP))
 fprintf('Recall media para árbol 3 con Cancer: %f\n',mean(RecallTree3TMP))
@@ -145,7 +166,7 @@ fprintf('ACC media para árbol 2 con Cancer: %f\n',mean(ACCTree2TMP))
 fprintf('Spec media para árbol 2 con Cancer: %f\n',mean(SpecTree2TMP))
 
 % Arbol 3
-[RecallTree3TMP,SpecTree3TMP,PrecisionTree3TMP,NPVTree3TMP,ACCTree3TMP,F1ScoreTree3TMP, predictionTree3] = predictResults(cv, inputs, outputs, mdls, 0);
+[RecallTree3TMP,SpecTree3TMP,PrecisionTree3TMP,NPVTree3TMP,ACCTree3TMP,F1ScoreTree3TMP, predictionTree3] = predictResults(cv, inputs, outputs, mdls3, 0);
 fprintf('\nDatos de test 3\n')
 fprintf('Precision media para árbol 3 con Cancer: %f\n',mean(PrecisionTree3TMP))
 fprintf('Recall media para árbol 3 con Cancer: %f\n',mean(RecallTree3TMP))
@@ -153,6 +174,6 @@ fprintf('ACC media para árbol 3 con Cancer: %f\n',mean(ACCTree3TMP))
 fprintf('Spec media para árbol 3 con Cancer: %f\n',mean(SpecTree3TMP))
 
 %% Diferencias significativas entre modelos
-muestras = [ACCLinearC;ACCQuadrC]';
-etiquetas = ['linear';'quadra'];
+muestras = [ACCLinearC;ACCQuadrC;ACCTree1TMP;ACCTree2TMP;ACCTree3TMP]';
+etiquetas = ['linear';'quadra';'tree_1';'tree_2';'tree_3'];
 [P] = testEstadistico(muestras,etiquetas,0.05);
