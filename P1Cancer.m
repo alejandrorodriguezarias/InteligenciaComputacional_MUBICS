@@ -14,7 +14,7 @@ inputs = dataset(:,1:9);
 outputs = dataset(:,10);
 newmatrix(outputs == 2) = {'benigno'};
 newmatrix(outputs == 4) = {'maligno'};
-outputs = newmatrix
+outputs = newmatrix'
 % eliminamos las variables correlacionadas
 corrcoef(inputs);
 inputs(:,2) = [];
