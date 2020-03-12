@@ -4,9 +4,11 @@ clear all
 rng('shuffle')
 %% cargamos la base de datos de Iris
 run loadIris
+%aleatorizamos los valores
 inputs = [VarName1, VarName2, VarName3, VarName4];
-outputs = Irissetosa;
-
+rdnIndx = randperm(size(inputs,1),size(inputs,1));
+inputs = inputs(rdnIndx,:);
+outputs = Irissetosa(rdnIndx,:);
 
 %% normalizaci�n
 % inputs = (inputs - mean(mean(inputs)))/std(std(inputs));
