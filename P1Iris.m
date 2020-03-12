@@ -62,13 +62,16 @@ fprintf('Recall media para el discriminante cuadratico con Iris: %f\n',mean(mean
 fprintf('ACC media para el discriminante cuadratico con Iris: %f\n',mean(mean(ACCQuadr)))
 fprintf('Spec media para el discriminante cuadratico con Iris : %f\n',mean(mean(SpecQuadr)))
 
-%% 
+%% Arboles
 inputsNames = {'sepalL','sepalW','petalL','petalW'};
+% MaxNumSplits: número máximo de bifurcaciones
+% MinLeafSize: número mínimo de observaciones para poder crear un nodo hoja
+% MinParentSize: cada nodo de ramificación tiene al menos MinParentSize observaciones
 mdls1 = trainingTree(cv,inputs,outputs,min(cv.TrainSize)-1,1,10,'on',inputsNames,'gdi'); % por defecto
-% mdls2 = trainingTree(cv,inputs,outputs,20,5,30,'on',inputsNames,'gdi'); 
-% mdls3 = trainingTree(cv,inputs,outputs,3,20,300,'on',inputsNames,'twoing');
+mdls2 = trainingTree(cv,inputs,outputs,20,30,30,'on',inputsNames,'gdi'); 
+mdls3 = trainingTree(cv,inputs,outputs,20,1,1,'on',inputsNames,'twoing');
 
-mdlMatrix = [mdls1];
+mdlMatrix = [mdls1;mdls2;mdls3];
 
 for n = 1:size(mdlMatrix,1)
     [RecallTreeTMP,SpecTreeTMP,PrecisionTreeTMP,NPVTreeTMP,ACCTreeTMP,F1ScoreTreeTMP, predictionTree] = predictResultsLOO(cv, inputs, outputs, mdlMatrix(n,:));
@@ -85,10 +88,10 @@ fprintf('\nENTRENAMIENTO');
 for v = 1:size(mdlMatrix,1)
     [RecallTreeTMP,SpecTreeTMP,PrecisionTreeTMP,NPVTreeTMP,ACCTreeTMP,F1ScoreTreeTMP, predictionTree] = predictResults(cv, inputs, outputs, mdlMatrix(1,:), 1);
     fprintf('\nDatos de entrenamiento de árbol %d\n',v)
-    fprintf('Precision media para árbol %d con Cancer: %f\n',v,mean(PrecisionTreeTMP))
-    fprintf('Recall media para árbol %d con Cancer: %f\n',v,mean(RecallTreeTMP))
-    fprintf('ACC media para árbol %d con Cancer: %f\n',v,mean(ACCTreeTMP))
-    fprintf('Spec media para árbol %d con Cancer: %f\n',v,mean(SpecTreeTMP))
+    fprintf('Precision media para árbol %d con Cancer: %f\n',v,mean(mean(PrecisionTreeTMP)))
+    fprintf('Recall media para árbol %d con Cancer: %f\n',v,mean(mean(RecallTreeTMP)))
+    fprintf('ACC media para árbol %d con Cancer: %f\n',v,mean(mean(ACCTreeTMP)))
+    fprintf('Spec media para árbol %d con Cancer: %f\n',v,mean(mean(SpecTreeTMP)))
 end
 
 %% Muestra los resultados medios del test
@@ -111,6 +114,6 @@ view(mdls3{1},'Mode','graph')
 ACCMeanLinear = mean(ACCLinear,2); % para cada modelo calculamos la ACC media para las tres clases de flor
 ACCMeanQuadr = mean(ACCQuadr,2);
 
-muestras = [ACCMeanLinear,ACCMeanQuadr];
-etiquetas = ['linear';'quadra'];
+muestras = [ACCMeanLinear,ACCMeanQuadr,ACCTree(1,:)',ACCTree(2,:)',ACCTree(3,:)'];
+etiquetas = ['linear';'quadra';'tree_1','tree_2','tree_3'];
 [P] = testEstadistico(muestras,etiquetas,0.05);
