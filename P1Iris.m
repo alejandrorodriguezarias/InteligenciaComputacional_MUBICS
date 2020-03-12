@@ -55,18 +55,12 @@ fprintf('ACC media para el discriminante cuadratico con Iris: %f\n',mean(mean(AC
 fprintf('Spec media para el discriminante cuadratico con Iris : %f\n',mean(mean(SpecQuadr)))
 
 %% muestra de resultados medios
-[RecallQuadr,SpecQuadr,PrecisionQuadr,NPVQuadr,ACCQuadr,F1ScoreQuadr, predictionQuadr] = predictResults(cv, inputs, outputs, mdls,0);
+[RecallQuadr,SpecQuadr,PrecisionQuadr,NPVQuadr,ACCQuadr,F1ScoreQuadr, predictionQuadr] = predictResultsLOO(cv, inputs, outputs, mdls);
 fprintf('\nDatos de test\n')
 fprintf('Precision media para el discriminante cuadratico con Iris: %f\n',mean(mean(PrecisionQuadr)))
 fprintf('Recall media para el discriminante cuadratico con Iris: %f\n',mean(mean(RecallQuadr)))
 fprintf('ACC media para el discriminante cuadratico con Iris: %f\n',mean(mean(ACCQuadr)))
 fprintf('Spec media para el discriminante cuadratico con Iris : %f\n',mean(mean(SpecQuadr)))
-
-%% Curva ROC
-plot((1-SpecQuadr),RecallQuadr, 'color','blue');
-hold on;
-plot((1-SpecLinear),RecallLinear, 'color','red');
-hold off;
 
 %% Diferencias significativas entre modelos
 ACCMeanLinear = mean(ACCLinear,2); % para cada modelo calculamos la ACC media para las tres clases de flor
