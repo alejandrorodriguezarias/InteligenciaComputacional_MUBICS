@@ -1,8 +1,12 @@
+%% limpiar  
+clear all
 %% cargamos la base de datos de cancer
 run loadCancer
 inputs = [VarName1, VarName2, VarName3, VarName4, VarName5, VarName6, VarName7, VarName8, VarName9];
 inputsNames = {'Uniformity of Cell Size', 'Uniformity of Cell Shape','Marginal Adhesion','Single Epithelial Cell Size','Bare Nuclei','Bland Chromatin','Normal Nucleoli','Mitoses'};
 outputs = ClaseCancer;
+
+rng('shuffle')
 
 %% eliminar valores nulos (se podría rellenar con valores medios)
 dataset = [inputs,outputs];
