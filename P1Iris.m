@@ -22,9 +22,8 @@ boxplot(inputs);
 %corrcoef(inputs);
 %% 10-fold como partici�n del conjunto de datos
 typeDiscr = 'linear';
-TypeCV = 'KFold';
-k = 10;
-cv = cvpartition(outputs,TypeCV,k);
+TypeCV = 'LeaveOut';
+cv = cvpartition(outputs,TypeCV);
 %% entrenamos con el discriminante lineal
 mdls = trainingDiscr(typeDiscr, cv, inputs, outputs);
 %% mostramos datos de entrenamiento
@@ -36,7 +35,7 @@ fprintf('ACC media para el discriminante lineal con Iris: %f\n',mean(mean(ACCLin
 fprintf('Spec media para el discriminante lineal con Iris : %f\n',mean(mean(SpecLinear)))
 
 %% muestra de resultados de test
-[RecallLinear,SpecLinear,PrecisionLinear,NPVLinear,ACCLinear,F1ScoreLinear, predictionLinear] = predictResults(cv, inputs, outputs, mdls, 0);
+[RecallLinear,SpecLinear,PrecisionLinear,NPVLinear,ACCLinear,F1ScoreLinear, predictionLinear] = predictResultsLOO(cv, inputs, outputs, mdls);
 fprintf('\nDatos de test\n')
 fprintf('Precision media para el discriminante lineal con Iris: %f\n',mean(mean(PrecisionLinear)))
 fprintf('Recall media para el discriminante lineal con Iris: %f\n',mean(mean(RecallLinear)))
