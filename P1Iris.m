@@ -113,7 +113,6 @@ view(mdls3{1},'Mode','graph')
 %% Diferencias significativas entre modelos
 ACCMeanLinear = mean(ACCLinear,2); % para cada modelo calculamos la ACC media para las tres clases de flor
 ACCMeanQuadr = mean(ACCQuadr,2);
-
 muestras = [ACCMeanLinear,ACCMeanQuadr,ACCTree(1,:)',ACCTree(2,:)',ACCTree(3,:)'];
-etiquetas = ['linear';'quadra';'tree_1','tree_2','tree_3'];
+etiquetas = ['linear';'quadra';'tree_1';'tree_2';'tree_3'];
 [P] = testEstadistico(muestras,etiquetas,0.05);
