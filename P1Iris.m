@@ -88,20 +88,20 @@ fprintf('\nENTRENAMIENTO');
 for v = 1:size(mdlMatrix,1)
     [RecallTreeTMP,SpecTreeTMP,PrecisionTreeTMP,NPVTreeTMP,ACCTreeTMP,F1ScoreTreeTMP, predictionTree] = predictResults(cv, inputs, outputs, mdlMatrix(1,:), 1);
     fprintf('\nDatos de entrenamiento de árbol %d\n',v)
-    fprintf('Precision media para árbol %d con Cancer: %f\n',v,mean(mean(PrecisionTreeTMP)))
-    fprintf('Recall media para árbol %d con Cancer: %f\n',v,mean(mean(RecallTreeTMP)))
-    fprintf('ACC media para árbol %d con Cancer: %f\n',v,mean(mean(ACCTreeTMP)))
-    fprintf('Spec media para árbol %d con Cancer: %f\n',v,mean(mean(SpecTreeTMP)))
+    fprintf('Precision media para árbol %d con Iris: %f\n',v,mean(mean(PrecisionTreeTMP)))
+    fprintf('Recall media para árbol %d con Iris: %f\n',v,mean(mean(RecallTreeTMP)))
+    fprintf('ACC media para árbol %d con Iris: %f\n',v,mean(mean(ACCTreeTMP)))
+    fprintf('Spec media para árbol %d con Iris: %f\n',v,mean(mean(SpecTreeTMP)))
 end
 
 %% Muestra los resultados medios del test
 fprintf('\nTEST')
 for i = 1:size(mdlMatrix,1)
     fprintf('\nDatos de test de árbol %d\n',i)
-    fprintf('Precision media para árbol %d con Cancer: %f\n',i,mean(PrecisionTree(i,:)))
-    fprintf('Recall media para árbol %d con Cancer: %f\n',i,mean(RecallTree(i,:)))
-    fprintf('ACC media para árbol %d con Cancer: %f\n',i,mean(ACCTree(i,:)))
-    fprintf('Spec media para árbol %d con Cancer: %f\n',i,mean(SpecTree(i,:)))
+    fprintf('Precision media para árbol %d con Iris: %f\n',i,mean(PrecisionTree(i,:)))
+    fprintf('Recall media para árbol %d con Iris: %f\n',i,mean(RecallTree(i,:)))
+    fprintf('ACC media para árbol %d con Iris: %f\n',i,mean(ACCTree(i,:)))
+    fprintf('Spec media para árbol %d con Iris: %f\n',i,mean(SpecTree(i,:)))
 end
 
 view(mdls1{1},'Mode','graph')
