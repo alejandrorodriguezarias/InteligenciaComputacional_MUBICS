@@ -6,5 +6,4 @@ for i = 1:cv.NumTestSets
 end
 end
 
-% , PredictorNamesValue, ResponseNameValue, SplitCriterionValue
 % , 'PredictorNames', PredictorNamesValue, 'ResponseName', ResponseNameValue, 'SplitCriterion', SplitCriterionValue

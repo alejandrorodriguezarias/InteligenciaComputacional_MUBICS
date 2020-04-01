@@ -1,14 +1,14 @@
-%% limpiar  
+%% limpiar  IDE
 clear all
 %% cargamos la base de datos de cancer
 run loadCancer
 inputs = [VarName1, VarName2, VarName3, VarName4, VarName5, VarName6, VarName7, VarName8, VarName9];
 inputsNames = {'Uniformity of Cell Size', 'Uniformity of Cell Shape','Marginal Adhesion','Single Epithelial Cell Size','Bare Nuclei','Bland Chromatin','Normal Nucleoli','Mitoses'};
 outputs = ClaseCancer;
-
+%semilla aleatoria
 rng('shuffle')
 
-%% eliminar valores nulos (se podría rellenar con valores medios)
+%% eliminar valores nulos
 dataset = [inputs,outputs];
 %filas con valores nulos
 rows = any(isnan(inputs),2);
@@ -16,6 +16,7 @@ rows = any(isnan(inputs),2);
 dataset(rows,:) = [];
 inputs = dataset(:,1:9);
 outputs = dataset(:,10);
+%renombramos las etiquetas de clase
 newmatrix(outputs == 2) = {'benigno'};
 newmatrix(outputs == 4) = {'maligno'};
 outputs = newmatrix';
@@ -42,12 +43,15 @@ fprintf('Precision media para el discriminante lineal con Cancer: %f\n',mean(Pre
 fprintf('Recall media para el discriminante lineal con Cancer: %f\n',mean(RecallLinear))
 fprintf('ACC media para el discriminante lineal con Cancer: %f\n',mean(ACCLinear))
 fprintf('Spec media para el discriminante lineal con Cancer: %f\n',mean(SpecLinear))
-%validamos el modelo
+
+%% validamos el modelo
 numReps = 10;
 for j = 1:numReps
      cv = cvpartition(outputs,TypeCV,k);
      mdls = trainingDiscr(typeDiscr, cv, inputs, outputs);
     [RecallLinearTMP,SpecLinearTMP,PrecisionLinearTMP,NPVLinearTMP,ACCLinearTMP,F1ScoreLinearTMP, predictionLinear] = predictResults(cv, inputs, outputs, mdls, 0);
+    %cada posición del array final representará una media de los resultados
+    %de un 10-fold
     RecallLinearC(j) = mean(RecallLinearTMP);
     SpecLinearC(j) = mean(SpecLinearTMP);
     PrecisionLinearC(j) = mean(PrecisionLinearTMP);
@@ -71,18 +75,21 @@ fprintf('Precision media para el discriminante cuadratico con Cancer: %f\n',mean
 fprintf('Recall media para el discriminante cuadratico con Cancer: %f\n',mean(RecallQuadr))
 fprintf('ACC media para el discriminante cuadratico con Cancer: %f\n',mean(ACCQuadr))
 fprintf('Spec media para el discriminante cuadratico con Cancer: %f\n',mean(SpecQuadr))
-%% muestra de resultados medios
+%% validamos el modelo
 numReps = 10;
 for j = 1:numReps
     cv = cvpartition(outputs,TypeCV,k);
     mdls = trainingDiscr(typeDiscr, cv, inputs, outputs);
     [RecallQuadrTMP,SpecQuadrTMP,PrecisionQuadrTMP,NPVQuadrTMP,ACCQuadrTMP,F1ScoreQuadrTMP, predictionLinear] = predictResults(cv, inputs, outputs, mdls, 0);
+    %cada posición del array final representará una media de los resultados
+    %de un 10-fold
     RecallQuadrC(j) = mean(RecallQuadrTMP);
     SpecQuadrC(j) = mean(SpecQuadrTMP);
     PrecisionQuadrC(j) = mean(PrecisionQuadrTMP);
     ACCQuadrC(j) = mean(ACCQuadrTMP);
     F1ScoreQuadrC(j) = mean(F1ScoreQuadrTMP);
 end
+%% muestra de resultados medios en test
 fprintf('\nDatos de test\n')
 fprintf('Precision media para el discriminante cuadratico con Cancer: %f\n',mean(PrecisionQuadrC))
 fprintf('Recall media para el discriminante cuadratico con Cancer: %f\n',mean(RecallQuadrC))
@@ -93,22 +100,22 @@ fprintf('Spec media para el discriminante cuadratico con Cancer: %f\n',mean(Spec
 TypeCV = 'KFold';
 k = 10;
 cv = cvpartition(outputs,TypeCV,k);
-% MaxNumSplits: número máximo de bifurcaciones
-% MinLeafSize: número mínimo de observaciones para poder crear un nodo hoja
-% MinParentSize: cada nodo de ramificación tiene al menos MinParentSize observaciones
-
 
 numReps = 10;
 for j = 1:numReps
     cv = cvpartition(outputs,TypeCV,k);
+    % MaxNumSplits: número máximo de bifurcaciones
+    % MinLeafSize: número mínimo de observaciones para poder crear un nodo hoja
+    % MinParentSize: cada nodo de ramificación tiene al menos MinParentSize observaciones
     mdls1 = trainingTree(cv,inputs,outputs,min(cv.TrainSize)-1,1,10,'on',inputsNames,'gdi'); % por defecto
-    mdls2 = trainingTree(cv,inputs,outputs,20,5,30,'on',inputsNames,'gdi'); 
-    mdls3 = trainingTree(cv,inputs,outputs,3,20,300,'on',inputsNames,'twoing');
+    mdls2 = trainingTree(cv,inputs,outputs,20,5,30,'on',inputsNames,'gdi'); %arbol medio
+    mdls3 = trainingTree(cv,inputs,outputs,3,20,300,'on',inputsNames,'twoing'); %arbol pequeño
     
     mdlMatrix = [mdls1;mdls2;mdls3];
     for n = 1:size(mdlMatrix,1)
         [RecallTreeTMP,SpecTreeTMP,PrecisionTreeTMP,NPVTreeTMP,ACCTreeTMP,F1ScoreTreeTMP, predictionTree] = predictResults(cv, inputs, outputs, mdlMatrix(n,:), 0);
-        
+        %cada posición del array final representará una media de los resultados
+        %de un 10-fold; Cada fila corresponde a un arbol
         RecallTree(n,j) = mean(RecallTreeTMP);
         SpecTree(n,j) = mean(SpecTreeTMP);
         PrecisionTree(n,j) = mean(PrecisionTreeTMP);
@@ -139,10 +146,10 @@ for i = 1:size(mdlMatrix,1)
     fprintf('ACC media para árbol %d con Cancer: %f\n',i,mean(ACCTree(i,:)))
     fprintf('Spec media para árbol %d con Cancer: %f\n',i,mean(SpecTree(i,:)))
 end
-
-%view(mdls1{1},'Mode','graph')
-%view(mdls2{1},'Mode','graph')
-%view(mdls3{1},'Mode','graph')
+%display de arboles
+view(mdls1{1},'Mode','graph')
+view(mdls2{1},'Mode','graph')
+view(mdls3{1},'Mode','graph')
 
 %% Entrenar SVM
 TypeCV = 'KFold';
@@ -150,20 +157,21 @@ k = 10;
 cv = cvpartition(outputs,TypeCV,k);
 
 numReps = 3;
-%inicialización
-% RecallSVM = [];
-% SpecSVM = [];
-% PrecisionSVM = [];
-% ACCSVM = [];
-% F1ScoreSVM = [];
 for j = 1:numReps
     cv = cvpartition(outputs,TypeCV,k);
+    %kernel gaussiano con sigma 1
     mdls1 = trainingSVM(cv,inputs,outputs,1,'gaussian',1);
+    %kernel polinomial de grado 2
     mdls2 = trainingSVM(cv,inputs,outputs,1,'polynomial',2);
+    %kernel lineal //se podría substituir por polinomial de grado 1
     mdls3 = trainingSVM(cv,inputs,outputs,1,'linear',0);
     
     mdlMatrix = [mdls1;mdls2;mdls3];
     
+    %obtenemos una matriz de resultados ordenada por filas
+    % 1º-3º filas para gaussiana
+    % 4º - 6º filas para polinomial
+    % 7º - 9º filas para linear
     for n = 1:size(mdlMatrix,1)
         [RecallSVMTMP,SpecSVMTMP,PrecisionSVMTMP,NPVSVMTMP,ACCSVMTMP,F1ScoreSVMTMP, predictionSVM] = predictResults(cv, inputs, outputs, mdlMatrix(n,:), 0);
         RecallSVM(numReps* (n-1) + j,:) = [RecallSVMTMP];
@@ -192,6 +200,7 @@ end
 %% Muestra los resultados medios del test
 fprintf('\nTEST')
 for i = 1:size(mdlMatrix,1)
+    %obtenemos las medias de las repeticiones para cada kernel
     inicio = (i-1)*3+1;
     fin = inicio +(numReps-1);
     fprintf('\nDatos de test de SVM %s\n',kernels(i,:))
@@ -201,6 +210,7 @@ for i = 1:size(mdlMatrix,1)
     fprintf('Spec media para SVM %s con Cancer: %f\n',kernels(i,:),mean(mean(SpecSVM(inicio:fin,:))))
 end
 %% Diferencias significativas entre modelos
+%obtenemos las medias de las repeticiones para cada kernel
 ACCSVMGauss = mean(ACCSVM(1:3,:));
 ACCSVMPoly = mean(ACCSVM(4:6,:));
 ACCSVMLinear = mean(ACCSVM(7:9,:));
