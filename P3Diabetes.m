@@ -19,6 +19,7 @@ inputs(:,1) = []; %1057 constantes
 %% normalizaci�n
 % inputs = (inputs - mean(mean(inputs)))/std(std(inputs));
 inputs = normalize(inputs);
+% [inputs,ps] = mapminmax(inputs, -1, 1);
 boxplot(inputs)
 %% 10-fold como particion del conjunto de datos
 typeDiscr = 'linear';
@@ -152,6 +153,7 @@ cv = cvpartition(outputs,TypeCV,k);
 numReps = 3;
 for j = 1:numReps
     cv = cvpartition(outputs,TypeCV,k);
+    %%%%%%%% USAR PARAMETRO C
     %kernel gaussiano con sigma 2
     mdls1 = trainingSVM(cv,inputs,outputs,1,'gaussian',2);
     %kernel polinomial de grado 2

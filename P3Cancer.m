@@ -26,7 +26,8 @@ inputs(:,2) = [];
 %% normalizaci�n
 % inputs = (inputs - mean(mean(inputs)))/std(std(inputs));
 inputs = normalize(inputs);
-boxplot(inputs)
+% [inputs,ps] = mapminmax(inputs, -1, 1);
+% boxplot(inputs)
 %% 10-fold como particion del conjunto de datos
 typeDiscr = 'linear';
 TypeCV = 'KFold';
