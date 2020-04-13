@@ -7,8 +7,8 @@ for i = 1:size(cvTraining,1)
     else
         idx = cvTest(i,:);    
     end
-    ECM{i} = sum(predict(mdls{i}, inputs(idx,:)) - outputs(idx))/size(outputs(idx),1);
-    
+    pred = predict(mdls{i}, inputs(idx,:));
+    ECM(i) = immse(pred,outputs(idx));
 end
 
 end
