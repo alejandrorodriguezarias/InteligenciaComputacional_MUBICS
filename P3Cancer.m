@@ -155,7 +155,7 @@ view(mdls3{1},'Mode','graph')
 %% Entrenar SVM
 TypeCV = 'KFold';
 k = 10;
-cv = cvpartition(outputs,TypeCV,k);
+% cv = cvpartition(outputs,TypeCV,k);
 
 numReps = 3;
 for j = 1:numReps
@@ -218,3 +218,5 @@ ACCSVMLinear = mean(ACCSVM(7:9,:));
 muestras = [ACCLinearC;ACCQuadrC;ACCTree(1,:);ACCTree(2,:);ACCTree(3,:);ACCSVMGauss ;ACCSVMPoly ;ACCSVMLinear ]';
 etiquetas = ['linear';'quadra';'tree_1';'tree_2';'tree_3';'SVMGau';'SVMPol';'SVMlin'];
 [P] = testEstadistico(muestras,etiquetas,0.05);
+
+save('resultadosCancer', 'muestras')
