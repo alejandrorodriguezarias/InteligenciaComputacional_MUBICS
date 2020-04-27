@@ -42,9 +42,9 @@ for j = 1:numReps
     
     % Modelos LM
 %   mdl = trainingRNA(cv, inputs, outputs, hiddenLayerSize, trainFCN, performFCN, trainRatio, valRatio);
-    mdls1LM = trainingRNA(cv, inputs, outputs, 4, 'trainlm', 'mse', 0.80, 0.20);
-    mdls2LM = trainingRNA(cv, inputs, outputs, 8, 'trainlm', 'mse', 0.80, 0.20);
-    mdls3LM = trainingRNA(cv, inputs, outputs, 16, 'trainlm', 'mse', 0.80, 0.20);
+    mdls1LM = trainingRNA(cv, inputs, outputs, 9, 'trainlm', 'mse', 0.80, 0.20);
+    mdls2LM = trainingRNA(cv, inputs, outputs, 17, 'trainlm', 'mse', 0.80, 0.20);
+    mdls3LM = trainingRNA(cv, inputs, outputs, 34, 'trainlm', 'mse', 0.80, 0.20);
     mdlMatrixLM = [mdls1LM;mdls2LM;mdls3LM];
     
     %obtenemos una matriz de resultados ordenada por filas
