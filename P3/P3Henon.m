@@ -34,11 +34,11 @@ for j = 1:numReps
         cvTest(i,:) = setdiff(indicesTot,cvTraining(i,:)); 
     end
     %kernel gaussiano con sigma 2
-    mdls1 = trainingRSVM(cvTraining,inputsG1,outputsG1,1,'gaussian',2);
+    mdls1 = trainingRSVM(cvTraining,inputsG1,outputsG1,3,'gaussian',2);
     %kernel polinomial de grado 2
-    mdls2 = trainingRSVM(cvTraining,inputsG1,outputsG1,1,'polynomial',3);
+    mdls2 = trainingRSVM(cvTraining,inputsG1,outputsG1,0.5,'polynomial',2);
     %kernel lineal //se podría substituir por polinomial de grado 1
-    mdls3 = trainingRSVM(cvTraining,inputsG1,outputsG1,1,'linear',0);
+    mdls3 = trainingRSVM(cvTraining,inputsG1,outputsG1,0.5,'linear',0);
     
     mdlMatrix = [mdls1;mdls2;mdls3];
     %obtenemos una matriz de resultados ordenada por filas
@@ -90,11 +90,11 @@ for j = 1:numReps
         cvTest(i,:) = setdiff(indicesTot,cvTraining(i,:)); 
     end
     %kernel gaussiano con sigma 2
-    mdls1 = trainingRSVM(cvTraining,inputsG2,outputsG2,1,'gaussian',2);
+    mdls1 = trainingRSVM(cvTraining,inputsG2,outputsG2,3,'gaussian',2);
     %kernel polinomial de grado 2
-    mdls2 = trainingRSVM(cvTraining,inputsG2,outputsG2,1,'polynomial',3);
+    mdls2 = trainingRSVM(cvTraining,inputsG2,outputsG2,0.5,'polynomial',2);
     %kernel lineal //se podría substituir por polinomial de grado 1
-    mdls3 = trainingRSVM(cvTraining,inputsG2,outputsG2,1,'linear',0);
+    mdls3 = trainingRSVM(cvTraining,inputsG2,outputsG2,0.5,'linear',0);
     
     mdlMatrix = [mdls1;mdls2;mdls3];
     %obtenemos una matriz de resultados ordenada por filas
@@ -138,14 +138,21 @@ ECMSVMLinearG1 = mean(ECMG1(7:9,:));
 ECMSVMGaussG2 = mean(ECMG2(1:3,:));
 ECMSVMPolyG2 = mean(ECMG2(4:6,:));
 ECMSVMLinearG2 = mean(ECMG2(7:9,:));
-muestras = [ECMSVMGaussG1; ECMSVMPolyG1; ECMSVMLinearG1;ECMSVMGaussG2; ECMSVMPolyG2; ECMSVMLinearG2]';
+
+muestrasHenonG1 = [ECMSVMGaussG1; ECMSVMPolyG1; ECMSVMLinearG1]';
+muestrasHenonG2 = [ECMSVMGaussG2; ECMSVMPolyG2; ECMSVMLinearG2]';
+save('resultadosHenonG1', 'muestrasHenonG1')
+save('resultadosHenonG2', 'muestrasHenonG2')
+
+muestras = [muestrasHenonG1, muestrasHenonG2];
 etiquetas = ['SVMGauG1';'SVMPolG1';'SVMlinG1';'SVMGauG2';'SVMPolG2';'SVMlinG2'];
 [P] = testEstadistico(muestras,etiquetas,0.05);
 
-muestras = [ECMSVMGaussG1; ECMSVMPolyG1; ECMSVMLinearG1]';
+muestras = muestrasHenonG1;
 etiquetas = ['SVMGauG1';'SVMPolG1';'SVMlinG1'];
 [P] = testEstadistico(muestras,etiquetas,0.05);
 
-muestras = [ECMSVMGaussG2; ECMSVMPolyG2; ECMSVMLinearG2]';
+muestras = muestrasHenonG2;
 etiquetas = ['SVMGauG2';'SVMPolG2';'SVMlinG2'];
 [P] = testEstadistico(muestras,etiquetas,0.05);
+

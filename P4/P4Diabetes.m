@@ -131,12 +131,12 @@ ACCRNALM1_9 = mean(ACCRNALM(1:3,:));
 ACCRNALM1_17 = mean(ACCRNALM(4:6,:));
 ACCRNALM1_34 = mean(ACCRNALM(7:9,:));
 
-load('resultadosDiabetes.mat')
+load('resultadosDiabetesP3.mat')
 
 % muestras = [ACCLinearC;ACCQuadrC;ACCTree(1,:);ACCTree(2,:);ACCTree(3,:);ACCSVMGauss ;ACCSVMPoly ;ACCSVMLinear ]';
 % etiquetas = ['linear';'quadra';'tree_1';'tree_2';'tree_3';'SVMGau';'SVMPol';'SVMlin'];
 
-muestras = [muestras'; ACCRNAGCE1_9; ACCRNAGCE1_17; ACCRNAGCE1_34; ACCRNALM1_9; ACCRNALM1_17; ACCRNALM1_34]';
+muestras = [muestrasDiabetes'; ACCRNAGCE1_9; ACCRNAGCE1_17; ACCRNAGCE1_34; ACCRNALM1_9; ACCRNALM1_17; ACCRNALM1_34]';
 etiquetas = ['linear    ';'quadra    ';'tree_1    ';'tree_2    ';'tree_3    ';'SVMGau    ';'SVMPol    ';'SVMlin    '; 'RNAGCE1-9 ';'RNAGCE1-17';'RNAGCE1-34'; 'RNALM1-9  ';'RNALM1-17 ';'RNALM1-34 '];
 [P] = testEstadistico(muestras,etiquetas,0.05);
 

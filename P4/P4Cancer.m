@@ -136,12 +136,12 @@ ACCRNALM1_4 = mean(ACCRNALM(1:3,:));
 ACCRNALM1_8 = mean(ACCRNALM(4:6,:));
 ACCRNALM1_16 = mean(ACCRNALM(7:9,:));
 
-load('resultadosCancer.mat')
+load('resultadosCancerP3.mat')
 
 % muestras = [ACCLinearC;ACCQuadrC;ACCTree(1,:);ACCTree(2,:);ACCTree(3,:);ACCSVMGauss ;ACCSVMPoly ;ACCSVMLinear ]';
 % etiquetas = ['linear';'quadra';'tree_1';'tree_2';'tree_3';'SVMGau';'SVMPol';'SVMlin'];
 
-muestras = [muestras'; ACCRNAGCE1_4; ACCRNAGCE1_8; ACCRNAGCE1_16; ACCRNALM1_4; ACCRNALM1_8; ACCRNALM1_16]';
+muestras = [muestrasCancer'; ACCRNAGCE1_4; ACCRNAGCE1_8; ACCRNAGCE1_16; ACCRNALM1_4; ACCRNALM1_8; ACCRNALM1_16]';
 etiquetas = ['linear    ';'quadra    ';'tree_1    ';'tree_2    ';'tree_3    ';'SVMGau    ';'SVMPol    ';'SVMlin    '; 'RNAGCE1-4 ';'RNAGCE1-8 ';'RNAGCE1-16'; 'RNALM1-4  ';'RNALM1-8  ';'RNALM1-16 '];
 [P] = testEstadistico(muestras,etiquetas,0.05);
 

@@ -153,11 +153,10 @@ k = 10;
 numReps = 3;
 for j = 1:numReps
     cv = cvpartition(outputs,TypeCV,k);
-    %%%%%%%% USAR PARAMETRO C
     %kernel gaussiano con sigma 2
-    mdls1 = trainingSVM(cv,inputs,outputs,1,'gaussian',2);
+    mdls1 = trainingSVM(cv,inputs,outputs,3,'gaussian',2);
     %kernel polinomial de grado 2
-    mdls2 = trainingSVM(cv,inputs,outputs,1,'polynomial',2);
+    mdls2 = trainingSVM(cv,inputs,outputs,0.5,'polynomial',2);
     %kernel lineal //se podría substituir por polinomial de grado 1
     mdls3 = trainingSVM(cv,inputs,outputs,1,'linear',0);
     
@@ -208,8 +207,8 @@ end
 ACCSVMGauss = mean(ACCSVM(1:3,:));
 ACCSVMPoly = mean(ACCSVM(4:6,:));
 ACCSVMLinear = mean(ACCSVM(7:9,:));
-muestras = [ACCLinear;ACCQuadr;ACCTree(1,:);ACCTree(2,:);ACCTree(3,:);ACCSVMGauss ;ACCSVMPoly ;ACCSVMLinear ]';
+muestrasDiabetes = [ACCLinear;ACCQuadr;ACCTree(1,:);ACCTree(2,:);ACCTree(3,:);ACCSVMGauss ;ACCSVMPoly ;ACCSVMLinear ]';
 etiquetas = ['linear';'quadra';'tree_1';'tree_2';'tree_3';'SVMGau';'SVMPol';'SVMlin'];
-[P] = testEstadistico(muestras,etiquetas,0.05);
+[P] = testEstadistico(muestrasDiabetes,etiquetas,0.05);
 
-save('resultadosDiabetes', 'muestras')
+save('resultadosDiabetesP3', 'muestrasDiabetes')

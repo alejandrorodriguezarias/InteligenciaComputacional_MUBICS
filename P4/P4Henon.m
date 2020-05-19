@@ -134,9 +134,9 @@ ECMRNALMG2_2 = mean(ECMLMG2(4:6,:));
 ECMRNALMG2_3 = mean(ECMLMG2(7:9,:));
 
 load('resultadosHenonG1.mat')
-muestrasG1 = muestras;
+muestrasG1 = muestrasHenonG1;
 load('resultadosHenonG2.mat')
-muestrasG2 = muestras;
+muestrasG2 = muestrasHenonG2;
 
 muestras = [muestrasG1'; muestrasG2'; ECMRNAGCEG1_1; ECMRNAGCEG1_2; ECMRNAGCEG1_3; ECMRNALMG1_1; ECMRNALMG1_2; ECMRNALMG1_3; 
             ECMRNAGCEG2_1; ECMRNAGCEG2_2; ECMRNAGCEG2_3; ECMRNALMG2_1; ECMRNALMG2_2; ECMRNALMG2_3]';
